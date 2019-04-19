@@ -1,5 +1,7 @@
 import userActivity from "user-activity";
 import goals from "user-activity";
+import { BodyPresenceSensor } from "body-presence";
+
 
 // Perk class definition
 class Perk {
@@ -55,6 +57,24 @@ function checkStrengthPerk() {
         checkEndurancePerk()
     )
 }
+// Lovers Embrace is earned when wearing the device on Valentines day or Sweetest day
+function checkLoversEmbrace() {
+    let currentDate = new Date();
+    if (
+        !(currentDate.monthIndex == 1 && currentDate.day == 14) &&
+        !(currentDate.monthIndex == 9 && currentDate.day == 19)
+    ) {
+        return false;
+    }
+
+    // Check body presence only if the device has this feature
+    let presence = true;
+    if (BodyPresenceSensor) {
+        let bodyPresence = new BodyPresenceSensor();
+        presence = bodyPresence.presence
+    }
+    return presence;
+}
 
 // List of current perks
 class Perks {
@@ -66,6 +86,7 @@ class Perks {
             new Perk("Strong Back", "perk-strongBack.png", checkStrongBackPerk),
             new Perk("Endurance", "perk-endurance.png", checkEndurancePerk),
             new Perk("Strength", "perk-strength.png", checkStrengthPerk),
+            new Perk("Lovers Embrace", "perk-loversEmbrace.png", checkLoversEmbrace)
         ]
     }
 
