@@ -1,7 +1,13 @@
 import userActivity from "user-activity";
 import goals from "user-activity";
 import { BodyPresenceSensor } from "body-presence";
+import document from "document";
 
+
+// Display perk details to the user
+const perkCard = document.getElementById("perkCard");
+const perkCardIcon = document.getElementById("perkCardIcon");
+const perkCardName = document.getElementById("perkCardName");
 
 // Perk class definition
 class Perk {
@@ -9,6 +15,7 @@ class Perk {
         this.name = name;
         this.href = href;
         this.check = check;
+        this.notified = false;
 
         this.achieved = false;
         this.achieved = this.isAchieved();
@@ -20,8 +27,8 @@ class Perk {
           if ( this.check() ) {
             this.achieved = true;
 
-            currentDate = new Date();
-            this.achieved_timestamp = currentDate.timestamp();
+            let currentDate = new Date();
+            this.achieved_timestamp = currentDate.getTime();
           }
         }
         return this.achieved;
@@ -99,6 +106,31 @@ class Perks {
         this.perks = newPerks;
     }
 
+    // Display the perk card
+    showPerkCard(perk) {
+        perkCardIcon.href = perk.href;
+        perkCardName.text = perk.name.toUpperCase();
+        perk.notified = true;
+
+        // Start the animation after a 5 second delay
+        setTimeout(function() {
+            perkCard.animate("enable");
+        }, 5000);
+    }
+
+    // Notify the user of the first achieved perk card
+    notifyUser() {
+        let i;
+        let len = this.perks.length;
+        for (i=0; i < len; i++) {
+            let perk = this.perks[i];
+            if (perk.achieved && !perk.notified) {
+                this.showPerkCard(perk);
+                break;
+            }
+        }
+    }
+
     getLatestPerk() {
         // Update perks when the date has changed
         let currentDate = new Date;
@@ -121,8 +153,19 @@ class Perks {
                 }
             }
         })
+
+        // Notify user of any new perks achieved
+        this.notifyUser();
+
         return latest;
     }
 }
 
 export const achievements = new Perks();
+
+// Close the perk card window and notify the user of additional achievements
+perkCard.onmousedown = function(e) {
+    perkCard.style.opacity = 0.0;
+    achievements.notifyUser();
+}
+
