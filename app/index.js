@@ -9,6 +9,7 @@ import { battery } from "power";
 import { me as device } from "device";
 import { goals } from "user-activity";
 import { today } from "user-activity";
+import { vaultBoyIcon } from "./perks/vaultBoy";
 
 // Update the clock every minute
 // We could do this in seconds, but there's really no need.
@@ -32,11 +33,14 @@ const heartIcon = document.getElementById("heartIcon");
 const heartIconBorder = document.getElementById("heartIconBorder");
 const batteryText = document.getElementById("battery");
 
+// Keep vaultBoy Icon up to date
+const vaultBoy = document.getElementById("vaultBoy")
+
 // Get heart rate from watch
 const hrm = new HeartRateSensor();
 
 hrm.onreading = function() {
-  hrate.text = `${hrm.heartRate}`; 
+  hrate.text = `${hrm.heartRate}`;
   
   if (hrm.heartRate > 131) {
     heartIconBorder.style.fill = "#FF0000";
@@ -57,6 +61,8 @@ progress.text = 'S    T    A    T    S';
 
 // Update the <text> element every tick with the current time
 clock.ontick = (evt) => {
+  vaultBoy.href = vaultBoyIcon();
+
   let today = evt.date;
   let hours = today.getHours();
   let month = 'NAN';
@@ -79,7 +85,7 @@ clock.ontick = (evt) => {
   let todaydayday = today.getDate();
   //let todaydayday = '31';
   let monthIndex = today.getMonth() + 1;
-  
+
   if (monthIndex === 1 && todaydayday === 18){
     progress.text = 'B    -    D    A    Y';
   }
@@ -101,7 +107,7 @@ clock.ontick = (evt) => {
   else {
     progress.text = 'S    T    A    T    S';
   }
-  
+
   switch (today.getDay()) {
     case 0:
       day = "SUNDAY";
@@ -186,7 +192,7 @@ clock.ontick = (evt) => {
   
   const elevGoalPercent  = Math.min(100, Math.round(elevValue / goals.elevationGain * 100));
   stairsProgressBar.width = Math.round(215 * elevGoalPercent / 100);
-  
+
   batteryBar.width = batteryValue;
   //batteryBar.width = 65;
   
