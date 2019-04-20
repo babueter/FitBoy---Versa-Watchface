@@ -3,11 +3,16 @@ import goals from "user-activity";
 import { BodyPresenceSensor } from "body-presence";
 import document from "document";
 
+// For debugging purposes
+let DEMO = false;
+let DEMO_COUNT = 1;
+
 
 // Display perk details to the user
 const perkCard = document.getElementById("perkCard");
 const perkCardIcon = document.getElementById("perkCardIcon");
 const perkCardName = document.getElementById("perkCardName");
+const perkCardCover = document.getElementById("perkCardCover");
 
 // Perk class definition
 class Perk {
@@ -38,21 +43,33 @@ class Perk {
 
 // Action Boy perk is achieved when active minutes goal has been met
 function checkActionBoyPerk() {
+    if (DEMO && DEMO_COUNT > 1) {
+        return true;
+    }
     let amValue = userActivity.today.adjusted["activeMinutes"];
     return (amValue >= goals.activeMinutes);
 }
 // Action points are granted when distance goal has been met
 function checkActionPointsPerk() {
+    if (DEMO && DEMO_COUNT > 2) {
+        return true;
+    }
     let distValue = userActivity.today.adjusted["distance"];
     return (distValue >= goals.distance);
 }
 // Strong back is achieved when elevation goal has been met
 function checkStrongBackPerk() {
+    if (DEMO && DEMO_COUNT > 3) {
+        return true;
+    }
     let elevValue = userActivity.today.adjusted["elevationGain"];
     return (elevValue >= goals.elevationGain);
 }
 // Endurance is gained when calories goal has been met
 function checkEndurancePerk() {
+    if (DEMO && DEMO_COUNT > 4) {
+        return true;
+    }
     let calsValue = userActivity.today.adjusted["calories"];
     return (calsValue >= goals.calories);
 }
@@ -67,6 +84,9 @@ function checkStrengthPerk() {
 }
 // Lovers Embrace is earned when wearing the device on Valentines day or Sweetest day
 function checkLoversEmbrace() {
+    if (DEMO && DEMO_COUNT > 5) {
+        return true;
+    }
     let currentDate = new Date();
     if (
         !(currentDate.monthIndex == 1 && currentDate.day == 14) &&
@@ -115,10 +135,9 @@ class Perks {
         perkCardName.text = perk.name.toUpperCase();
         perk.notified = true;
 
-        // Start the animation after a 5 second delay
-        setTimeout(function() {
-            perkCard.animate("enable");
-        }, 5000);
+        // Start the animation
+        perkCard.style.opacity = 1.0;
+        perkCardCover.animate("enable");
     }
 
     // Notify the user of the first achieved perk card
@@ -153,6 +172,8 @@ class Perks {
         // Return the latest perk achieved or null
         let latest = null;
         let perk;
+        DEMO_COUNT++;
+
         this.perks.forEach(function(perk) {
             if (perk.isAchieved()) {
                 if (latest != null) {
