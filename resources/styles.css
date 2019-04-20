@@ -99,13 +99,3 @@
   fill: #01270E;
   opacity: 0.75;
 }
-
-#perkCardName {
-  font-size: 23;
-  font-family: Tungsten;
-  text-anchor: middle;
-  x: 50%;
-  y: 100%-40;
-  fill: #01270E;
-  text-length: 16;
-}
