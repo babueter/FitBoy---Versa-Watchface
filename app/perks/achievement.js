@@ -25,6 +25,7 @@ class Perk {
     isAchieved() {
         if ( !this.achieved ) {
           if ( this.check() ) {
+            console.log("perk: newly achieved "+this.name);
             this.achieved = true;
 
             let currentDate = new Date();
@@ -87,6 +88,7 @@ function checkLoversEmbrace() {
 class Perks {
     constructor() {
         this.date = new Date();
+        console.log("perk: creating new Perks: "+this.date);
         this.perks = [
             new Perk("Action Boy", "perk-actionBoy.png", checkActionBoyPerk),
             new Perk("Action Points", "perk-actionPoints.png", checkActionPointsPerk),
@@ -95,6 +97,7 @@ class Perks {
             new Perk("Strength", "perk-strength.png", checkStrengthPerk),
             new Perk("Lovers Embrace", "perk-loversEmbrace.png", checkLoversEmbrace)
         ]
+        this.notifyingUser = false;
     }
 
     // Replace all perks with new objects
@@ -120,11 +123,18 @@ class Perks {
 
     // Notify the user of the first achieved perk card
     notifyUser() {
+        // Avoid notifying two achievements at once
+        if (this.notifyingUser) {
+            return;
+        }
+        this.notifyingUser = true;
+
         let i;
         let len = this.perks.length;
         for (i=0; i < len; i++) {
             let perk = this.perks[i];
             if (perk.achieved && !perk.notified) {
+                console.log("perk: notifying user of achievment: "+perk.name);
                 this.showPerkCard(perk);
                 break;
             }
@@ -135,6 +145,7 @@ class Perks {
         // Update perks when the date has changed
         let currentDate = new Date;
         if (this.date.toDateString() != currentDate.toDateString()) {
+            console.log("perk: replacing perk cards: "+this.date.toDateString() + " != " + currentDate.toDateString());
             this.updatePerks();
             this.date = currentDate;
         }
@@ -166,6 +177,8 @@ export const achievements = new Perks();
 // Close the perk card window and notify the user of additional achievements
 perkCard.onmousedown = function(e) {
     perkCard.style.opacity = 0.0;
+
+    achievements.notifyingUser = false;
     achievements.notifyUser();
 }
 
