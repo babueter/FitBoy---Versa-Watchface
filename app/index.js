@@ -105,14 +105,14 @@ function checkActionBoyPerk() {
     console.log("perk: checkActionBoyPerk: " + amValue + " vs "+ goals.activeMinutes);
     return (amValue >= goals.activeMinutes);
 }
-// Action points are granted when distance goal has been met
+// Action points are granted when calories goal has been met
 function checkActionPointsPerk() {
     if (DEMO && DEMO_COUNT > 2) {
         return true;
     }
-    let distValue = userActivity.today.adjusted["distance"];
-    console.log("perk: checkActionPointsPerk: " + distValue + " vs "+ goals.distance);
-    return (distValue >= goals.distance);
+    let calsValue = userActivity.today.adjusted["calories"];
+    console.log("perk: checkActionPointsPerk: " + calsValue + " vs "+ goals.calories);
+    return (calsValue >= goals.calories);
 }
 // Strong back is achieved when elevation goal has been met
 function checkStrongBackPerk() {
@@ -123,14 +123,14 @@ function checkStrongBackPerk() {
     console.log("perk: checkStrongBackPerk: " + elevValue + " vs "+ goals.elevationGain);
     return (elevValue >= goals.elevationGain);
 }
-// Endurance is gained when calories goal has been met
+// Endurance is gained when distance goal has been met
 function checkEndurancePerk() {
     if (DEMO && DEMO_COUNT > 4) {
         return true;
     }
-    let calsValue = userActivity.today.adjusted["calories"];
-    const calGoalPercent  = Math.min(100, Math.round(calsValue / goals.calories * 100));
-    return (calsValue >= goals.calories);
+    let distValue = userActivity.today.adjusted["distance"];
+    console.log("perk: checkEndurancePerk: " + distValue + " vs "+ goals.distance);
+    return (distValue >= goals.distance);
 }
 // Strength perk is achieved when all 4 daily goals are met
 function checkStrengthPerk() {
